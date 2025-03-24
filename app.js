@@ -1,5 +1,4 @@
-"use strict";
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function () {
     console.log('VRealm Profile loaded');
     // Smooth scrolling for navigation links
     implementSmoothScrolling();
@@ -13,15 +12,17 @@ document.addEventListener('DOMContentLoaded', () => {
     implementHoverEffects();
     // Track booking button clicks
     trackBookingButtonClicks();
+    // Initialize OpenStreetMap
+    initOpenStreetMap();
 });
 function implementSmoothScrolling() {
-    const navLinks = document.querySelectorAll('.nav-links a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
+    var navLinks = document.querySelectorAll('.nav-links a');
+    navLinks.forEach(function (link) {
+        link.addEventListener('click', function (e) {
             e.preventDefault();
-            const targetId = e.currentTarget.getAttribute('href') || '';
-            if (targetId.startsWith('#')) {
-                const targetElement = document.querySelector(targetId);
+            var targetId = e.currentTarget.getAttribute('href') || '';
+            if (targetId && targetId.indexOf('#') === 0) {
+                var targetElement = document.querySelector(targetId);
                 if (targetElement) {
                     window.scrollTo({
                         top: targetElement.getBoundingClientRect().top + window.pageYOffset - 80,
@@ -30,7 +31,7 @@ function implementSmoothScrolling() {
                     // Update URL without page reload
                     history.pushState(null, '', targetId);
                     // Update active state in navigation
-                    navLinks.forEach(navLink => navLink.classList.remove('active'));
+                    navLinks.forEach(function (navLink) { return navLink.classList.remove('active'); });
                     e.currentTarget.classList.add('active');
                 }
             }
@@ -38,30 +39,30 @@ function implementSmoothScrolling() {
     });
 }
 function implementParallaxEffect() {
-    const header = document.querySelector('.vr-header');
-    window.addEventListener('scroll', () => {
+    var header = document.querySelector('.vr-header');
+    window.addEventListener('scroll', function () {
         if (header) {
-            const scrollPosition = window.pageYOffset;
-            header.style.backgroundPositionY = `${scrollPosition * 0.5}px`;
+            var scrollPosition = window.pageYOffset;
+            header.style.backgroundPositionY = "".concat(scrollPosition * 0.5, "px");
         }
     });
 }
 function implementScrollSpy() {
-    const sections = document.querySelectorAll('.vr-section, .vr-header');
-    const navLinks = document.querySelectorAll('.nav-links a');
-    window.addEventListener('scroll', () => {
-        let current = '';
-        sections.forEach(section => {
-            const sectionElement = section;
-            const sectionTop = sectionElement.offsetTop - 100;
-            const sectionHeight = sectionElement.clientHeight;
+    var sections = document.querySelectorAll('.vr-section, .vr-header');
+    var navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', function () {
+        var current = '';
+        sections.forEach(function (section) {
+            var sectionElement = section;
+            var sectionTop = sectionElement.offsetTop - 100;
+            var sectionHeight = sectionElement.clientHeight;
             if (window.pageYOffset >= sectionTop) {
                 current = sectionElement.getAttribute('id') || '';
             }
         });
-        navLinks.forEach(link => {
+        navLinks.forEach(function (link) {
             link.classList.remove('active');
-            const href = link.getAttribute('href');
+            var href = link.getAttribute('href');
             if (href && href.substring(1) === current) {
                 link.classList.add('active');
             }
@@ -70,9 +71,9 @@ function implementScrollSpy() {
 }
 function implementScrollAnimations() {
     // Initialize animation for elements when they come into view
-    const animatedElements = document.querySelectorAll('.card, .about-content, .contact-container');
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
+    var animatedElements = document.querySelectorAll('.card, .about-content, .contact-container');
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
             if (entry.isIntersecting) {
                 entry.target.classList.add('fade-in');
                 observer.unobserve(entry.target);
@@ -81,50 +82,46 @@ function implementScrollAnimations() {
     }, {
         threshold: 0.1
     });
-    animatedElements.forEach(element => {
+    animatedElements.forEach(function (element) {
         // Remove default animation to control via JS
         element.classList.remove('fadeIn');
         observer.observe(element);
     });
     // Add CSS for fade-in animation if not already defined
-    const style = document.createElement('style');
-    style.textContent = `
-        .fade-in {
-            animation: fadeIn 1s ease forwards;
-        }
-    `;
+    var style = document.createElement('style');
+    style.textContent = "\n        .fade-in {\n            animation: fadeIn 1s ease forwards;\n        }\n    ";
     document.head.appendChild(style);
 }
 function implementHoverEffects() {
     // Add 3D tilt effect to cards on hover
-    const cards = document.querySelectorAll('.card');
-    cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const mouseEvent = e;
-            const cardElement = card;
-            const rect = cardElement.getBoundingClientRect();
-            const x = mouseEvent.clientX - rect.left;
-            const y = mouseEvent.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const angleX = (y - centerY) / 10;
-            const angleY = (centerX - x) / 10;
-            cardElement.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) translateZ(10px)`;
+    var cards = document.querySelectorAll('.card');
+    cards.forEach(function (card) {
+        card.addEventListener('mousemove', function (e) {
+            var mouseEvent = e;
+            var cardElement = card;
+            var rect = cardElement.getBoundingClientRect();
+            var x = mouseEvent.clientX - rect.left;
+            var y = mouseEvent.clientY - rect.top;
+            var centerX = rect.width / 2;
+            var centerY = rect.height / 2;
+            var angleX = (y - centerY) / 10;
+            var angleY = (centerX - x) / 10;
+            cardElement.style.transform = "perspective(1000px) rotateX(".concat(angleX, "deg) rotateY(").concat(angleY, "deg) translateZ(10px)");
         });
-        card.addEventListener('mouseleave', () => {
-            const cardElement = card;
+        card.addEventListener('mouseleave', function () {
+            var cardElement = card;
             cardElement.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
             cardElement.style.transition = 'transform 0.5s ease';
         });
     });
 }
 function trackBookingButtonClicks() {
-    const bookingButtons = document.querySelectorAll('#booking-btn, #booking-btn-footer');
-    bookingButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
+    var bookingButtons = document.querySelectorAll('#booking-btn, #booking-btn-footer');
+    bookingButtons.forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
             console.log('Booking button clicked - redirecting to booksy.pl');
             // Optional: Add fancy transition effect before redirect
-            const btnElement = e.currentTarget;
+            var btnElement = e.currentTarget;
             btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Przekierowuję...';
             // You could add analytics tracking here in a real application
             // Redirect happens via the href attribute in the anchor tag
@@ -132,19 +129,19 @@ function trackBookingButtonClicks() {
     });
 }
 // Add mobile navigation toggle functionality for responsive design
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function () {
     // Create mobile menu button
-    const nav = document.querySelector('.vr-nav');
-    const mobileMenuBtn = document.createElement('button');
+    var nav = document.querySelector('.vr-nav');
+    var mobileMenuBtn = document.createElement('button');
     mobileMenuBtn.className = 'mobile-menu-btn';
     mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
     nav.appendChild(mobileMenuBtn);
     // Add menu toggle functionality
-    const navLinks = document.querySelector('.nav-links');
-    mobileMenuBtn.addEventListener('click', () => {
+    var navLinks = document.querySelector('.nav-links');
+    mobileMenuBtn.addEventListener('click', function () {
         navLinks.classList.toggle('active');
         // Toggle between hamburger and close icon
-        const icon = mobileMenuBtn.querySelector('i');
+        var icon = mobileMenuBtn.querySelector('i');
         if (icon) {
             if (icon.classList.contains('fa-bars')) {
                 icon.classList.remove('fa-bars');
@@ -157,47 +154,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     // Add mobile menu styles
-    const style = document.createElement('style');
-    style.textContent = `
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            z-index: 1001;
-        }
-        
-        @media (max-width: 768px) {
-            .mobile-menu-btn {
-                display: block;
-            }
-            
-            .nav-links {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 80%;
-                max-width: 300px;
-                height: 100vh;
-                background: rgba(18, 18, 18, 0.95);
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                z-index: 1000;
-                transition: right 0.3s ease;
-            }
-            
-            .nav-links.active {
-                right: 0;
-            }
-            
-            .nav-links li {
-                margin: 1rem 0;
-            }
-        }
-    `;
+    var style = document.createElement('style');
+    style.textContent = "\n        .mobile-menu-btn {\n            display: none;\n            background: none;\n            border: none;\n            color: white;\n            font-size: 1.5rem;\n            cursor: pointer;\n            z-index: 1001;\n        }\n        \n        @media (max-width: 768px) {\n            .mobile-menu-btn {\n                display: block;\n            }\n            \n            .nav-links {\n                position: fixed;\n                top: 0;\n                right: -100%;\n                width: 80%;\n                max-width: 300px;\n                height: 100vh;\n                background: rgba(18, 18, 18, 0.95);\n                display: flex;\n                flex-direction: column;\n                justify-content: center;\n                align-items: center;\n                z-index: 1000;\n                transition: right 0.3s ease;\n            }\n            \n            .nav-links.active {\n                right: 0;\n            }\n            \n            .nav-links li {\n                margin: 1rem 0;\n            }\n        }\n    ";
     document.head.appendChild(style);
 });
+// Inicjalizacja mapy OpenStreetMap z biblioteką Leaflet
+function initOpenStreetMap() {
+    if (typeof L !== 'undefined') {
+        // Współrzędne lokalizacji MoveVR
+        var moveVrLocation = [52.3324863, 21.1256934];
+        // Inicjalizacja mapy (podstawiamy div o id="map")
+        var mapElement = document.getElementById('map');
+        if (mapElement) {
+            var map = L.map('map').setView(moveVrLocation, 15);
+            // Dodanie warstwy kafelków OpenStreetMap
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            // Dodanie znacznika na mapie
+            var marker = L.marker(moveVrLocation).addTo(map);
+            // Dodanie okienka informacyjnego po kliknięciu na znacznik
+            marker.bindPopup("<b>MoveVR</b><br>Twój portal do wirtualnej rzeczywistości").openPopup();
+        }
+    }
+    else {
+        console.error('Biblioteka Leaflet nie została załadowana.');
+    }
+}

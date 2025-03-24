@@ -6,6 +6,14 @@
     <title>MoveVR - Twój Portal do Wirtualnej Rzeczywistości</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Dodanie stylu Leaflet do projektu -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <!-- Dodanie skryptu Leaflet przed naszym skryptem app.js -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
 </head>
 <body>
     <div class="vr-container">
@@ -83,6 +91,11 @@
                         </div>
                     </div>
                 </div>
+            </section>
+
+            <section id="location" class="vr-section">
+                <h2 class="section-title">Nasza <span class="highlight">Lokalizacja</span></h2>
+                <div id="map"></div>
             </section>
 
             <section id="contact" class="vr-section">

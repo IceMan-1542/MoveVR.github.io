@@ -1,3 +1,10 @@
+// Deklaracja typów dla biblioteki Leaflet
+declare namespace L {
+    function map(id: string): any;
+    function tileLayer(url: string, options?: any): any;
+    function marker(latlng: [number, number]): any;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('VRealm Profile loaded');
     
@@ -18,6 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Track booking button clicks
     trackBookingButtonClicks();
+    
+    // Initialize OpenStreetMap
+    initOpenStreetMap();
 });
 
 function implementSmoothScrolling(): void {
@@ -29,7 +39,7 @@ function implementSmoothScrolling(): void {
             
             const targetId = (e.currentTarget as HTMLAnchorElement).getAttribute('href') || '';
             
-            if (targetId.startsWith('#')) {
+            if (targetId && targetId.indexOf('#') === 0) {
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
                     window.scrollTo({
@@ -238,3 +248,31 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(style);
 });
+
+// Inicjalizacja mapy OpenStreetMap z biblioteką Leaflet
+function initOpenStreetMap(): void {
+    if (typeof L !== 'undefined') {
+        // Współrzędne lokalizacji MoveVR
+        const moveVrLocation: [number, number] = [52.3324863, 21.1256934];
+        
+        // Inicjalizacja mapy (podstawiamy div o id="map")
+        const mapElement = document.getElementById('map');
+        if (mapElement) {
+            const map = L.map('map').setView(moveVrLocation, 15);
+            
+            // Dodanie warstwy kafelków OpenStreetMap
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            // Dodanie znacznika na mapie
+            const marker = L.marker(moveVrLocation).addTo(map);
+            
+            // Dodanie okienka informacyjnego po kliknięciu na znacznik
+            marker.bindPopup("<b>MoveVR</b><br>Twój portal do wirtualnej rzeczywistości").openPopup();
+        }
+    } else {
+        console.error('Biblioteka Leaflet nie została załadowana.');
+    }
+}
